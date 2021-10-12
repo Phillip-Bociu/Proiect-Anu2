@@ -1,3 +1,3 @@
 module Proiect {
 	test;
-}
+}asd
