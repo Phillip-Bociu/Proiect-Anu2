@@ -15,14 +15,8 @@ public class TestMain {
 		Server s = new Server();
 		s.start();
 
-		Client c = new Client("127.0.0.1");
-		c.start();
-		String packet = new String("ping");
-		System.out.println(packet.length());
-		c.sendData(packet.getBytes());
-
 		try {
-			Thread.sleep(5000);
+			Thread.sleep(500000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
