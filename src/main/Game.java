@@ -11,9 +11,12 @@ import java.awt.image.DataBufferInt;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
+import entities.Player;
 import main.gfx.Colours;
+import main.gfx.Font;
 import main.gfx.Screen;
 import main.gfx.SpriteSheet;
+import map.Map;
 
 
 /**
@@ -30,6 +33,7 @@ public class Game extends Canvas implements Runnable{
 	public static final int SCALE=3;
 	public static final String NAME = "Octopus Game";
 	public static final String ICON = "resource/icon.png";
+	public static final String mapPath = "/maps/basic_map.png";
 	
 	private JFrame frame;
 	
@@ -42,8 +46,9 @@ public class Game extends Canvas implements Runnable{
 	private int[] colours = new int[6*6*6];
 	
 	private Screen screen;
-	
 	public InputH inputH;
+	public Map map;
+	public Player player;
 	
 	/**
 	 * Initializing some other variables, mostly JFrame stuff
@@ -89,6 +94,9 @@ public class Game extends Canvas implements Runnable{
 		
 		screen = new Screen(WIDTH,HEIGHT,new SpriteSheet("/sprite_sheet.png"));
 		inputH = new InputH(this);
+		map = new Map(mapPath);
+		player = new Player(map, 16*map.spawnX, 16*map.spawnY, inputH);
+		map.addEntity(player);
 	}
 	
 	
@@ -165,17 +173,14 @@ public class Game extends Canvas implements Runnable{
 		}
 	}
 	
+	
 	/**
 	 * Processes stuff
 	 */
 	public void tick() {
 		tickCount++;
-		//check input
-		if(inputH.up.isPressed()) screen.yOffset-=2;
-		if(inputH.down.isPressed()) screen.yOffset+=2;
-		if(inputH.left.isPressed()) screen.xOffset-=2;
-		if(inputH.right.isPressed()) screen.xOffset+=2;
-			
+		
+		map.tick();	
 	}
 	
 	/**
@@ -188,11 +193,16 @@ public class Game extends Canvas implements Runnable{
 			return;
 		}
 		
-		for(int y = 0;y<16;y++) {
-			for(int x = 0;x<16;x++) {
-				screen.render(x<<4, y<<4, 0, Colours.get(555,505,055,550), false, true);
-			}
-		}
+		int xOffset = player.x - (screen.width/2);
+		int yOffset = player.y - (screen.height/2);
+		
+		map.renderTiles(screen, xOffset, yOffset);
+		
+		//String message = "Hell Yeah!!!";
+		//Font.render("GAME OVER", screen, screen.xOffset + screen.width/2 - message.length()*8, screen.yOffset + screen.height/2 - 16 + 8, Colours.get(-1,-1,-1,500),1);
+		player.renderHealth(screen);
+		
+		map.renderEntities(screen);
 		
 		for(int y = 0;y<screen.height;y++) {
 			for(int x = 0;x<screen.width;x++) {

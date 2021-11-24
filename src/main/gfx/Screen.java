@@ -30,6 +30,7 @@ public class Screen {
 		pixels = new int[width*height];
 	}
 	
+	
 
 	/**
 	 * It renders the wanted tile
@@ -40,10 +41,11 @@ public class Screen {
 	 * @param xMirror set true if you want to flip it vertically
 	 * @param yMirror set true if you want to flip it horizontally
 	 */
-	public void render(int xPos,int yPos, int tile, int colour, boolean xMirror, boolean yMirror) {
+	public void render(int xPos,int yPos, int tile, int colour, boolean xMirror, boolean yMirror, int scale) {
 		xPos -= xOffset;
 		yPos -= yOffset;
 		
+		int scaleMap = scale - 1;
 		// a way to get the number of the tile
 		int xTile = tile %32;
 		int yTile = tile /32;
@@ -51,14 +53,31 @@ public class Screen {
 		for(int y=0;y<16;y++) {
 			int ySheet = y;
 			if(yMirror) ySheet = 15 - ySheet;
-			if(y+yPos < 0 || y+yPos >=height) continue;
+			int yPixel = y + yPos + (y* scaleMap) - ((scaleMap << 4)/2);
+			
 			for(int x=0;x<16;x++) {
-				if(x+xPos < 0 || x+xPos >=width) continue;
 				int xSheet = x;
 				if(xMirror) xSheet = 15 - xSheet;
-				int col = (colour >> (sheet.pixels[xSheet + ySheet*sheet.width + tileOffset]*8))&255; //nu ar trb sa mearga cu 8
-				if(col<255) pixels[(x+xPos)+(y+yPos)*width] = col;
+				int xPixel = x + xPos + (x* scaleMap) - ((scaleMap << 4)/2);
+				int col = (colour >> (sheet.pixels[xSheet + ySheet*sheet.width + tileOffset]*8))&255;
+				if(col<255) {
+					for(int yScale = 0; yScale < scale; yScale++) {
+						if(yPixel + yScale < 0 || yPixel+yScale >=height) continue;
+						for(int xScale = 0; xScale < scale; xScale++) {
+							
+							if(xPixel+xScale < 0 || xPixel+xScale >=width) continue;
+							pixels[(xPixel+xScale)+(yPixel+yScale)*width] = col;
+						}	
+					}
+				}
 			}
 		}
 	}
+	public void render(int xPos,int yPos, int tile, int colour, int scale) {
+		render(xPos, yPos, tile, colour, false, false, scale);
+	}
+	public void setOffset(int xOffset, int yOffset) {
+        this.xOffset = xOffset;
+        this.yOffset = yOffset;
+    }
 }

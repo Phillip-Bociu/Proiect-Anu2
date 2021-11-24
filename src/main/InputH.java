@@ -2,6 +2,9 @@ package main;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+/**
+ * A simple key listener that checks the keyboard buttons
+ */
 public class InputH implements KeyListener{
 	
 	public InputH(Game game) {
