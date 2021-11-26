@@ -1,20 +1,27 @@
 package entities;
 
+
+import java.util.ArrayList;
+import java.util.List;
+
 import main.InputH;
 import main.gfx.Colours;
 import main.gfx.Screen;
 import map.Map;
+import networking.PlayerPacket;
 
 public class Player extends Mob{
 	
 	private InputH input;
 	private int colour = Colours.get(-1,401,502,555);
 	private int scale = 1;
+	private boolean isYou = true;
 	
-	public Player(Map map, int x, int y, InputH input) {
+	public Player(Map map, int x, int y, InputH input, boolean isYou) {
 		super(map, "Player", x, y, 1);
 		this.input = input;	
 		this.speed = 2;
+		this.isYou = isYou;
 	}
 	
 	public static boolean toBool(int x)
@@ -26,21 +33,45 @@ public class Player extends Mob{
 	public void tick() {
 		checkDamagingTile(x+4,y+4);
 		
-		int xa = 0;
-		int ya = 0;
-		
-		if(input.up.isPressed()) ya--;
-		if(input.down.isPressed()) ya++;
-		if(input.left.isPressed()) xa--;
-		if(input.right.isPressed()) xa++;
-		
-		if(xa !=0 || ya!=0) {
-			move(xa,ya);
-			isMoving = true;
-		}else {
-			isMoving = false;
+		if(isYou)
+		{			
+			int xa = 0;
+			int ya = 0;
+			if(input.up.isPressed()) ya--;
+			if(input.down.isPressed()) ya++;
+			if(input.left.isPressed()) xa--;
+			if(input.right.isPressed()) xa++;
+			
+			if(xa !=0 || ya!=0) {
+				move(xa,ya);
+				isMoving = true;
+			}else {
+				isMoving = false;
+			}
+			synchronized(Map.lastReceivedPacket)
+			{				
+				Map.lastSentPacket.x = x;
+				Map.lastSentPacket.y = y;
+				Map.lastSentPacket.movingDir = movingDir;
+				Map.lastSentPacket.numSteps = numSteps;
+			}
+		} else
+		{
+			// x, y, movingDir, numsteps
+			synchronized(Map.lastReceivedPacket)
+			{				
+				if(Map.lastReceivedPacket.x != -1)
+					x = Map.lastReceivedPacket.x;
+				if(Map.lastReceivedPacket.y != -1)	
+					y = Map.lastReceivedPacket.y;
+				if(Map.lastReceivedPacket.movingDir != -1)
+					movingDir = Map.lastReceivedPacket.movingDir;
+				if(Map.lastReceivedPacket.numSteps != -1)
+					numSteps = Map.lastReceivedPacket.numSteps;
+			}
 		}
-	}
+		
+}
 	public void render(Screen screen) {
 		int xTile = 0;
 		int yTile = 28;

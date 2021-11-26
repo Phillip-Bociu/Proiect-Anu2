@@ -7,6 +7,8 @@ import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -18,7 +20,7 @@ import main.gfx.Screen;
 import main.gfx.SpriteSheet;
 import map.Map;
 import menu.Gui;
-
+import networking.*;
 
 /**
  * Main class that operates the game
@@ -50,8 +52,10 @@ public class Game extends Canvas implements Runnable{
 	private Screen screen;
 	public InputH inputH;
 	public Map map;
-	public Player player;
+	public Player player, player2;
 	public Gui gui;
+	public Client client;
+	public Server server;
 	public boolean menu = true;
 	
 	/**
@@ -73,6 +77,18 @@ public class Game extends Canvas implements Runnable{
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
+	}
+	
+	public void Connect(String ipAddress)
+	{
+		client = new Client(ipAddress);
+		client.start();
+	}
+	
+	public void Host()
+	{
+		server = new Server();
+		server.start();
 	}
 	
 	
@@ -104,8 +120,10 @@ public class Game extends Canvas implements Runnable{
 	public void initWorld()
 	{
 		map = new Map(mapPath);
-		player = new Player(map, 16*map.spawnX, 16*map.spawnY, inputH);
+		player = new Player(map, 16*map.spawnX, 16*map.spawnY, inputH, true);
+		player2 = new Player(map, 16*map.spawnX, 16*map.spawnY, inputH, false);
 		map.addEntity(player);
+		map.addEntity(player2);
 	}
 	
 	
@@ -179,7 +197,6 @@ public class Game extends Canvas implements Runnable{
 			if(System.currentTimeMillis() - certainTimer >= 1000)
 			{
 				certainTimer +=1000;
-				System.out.println("fps = " + frames + " ticks = " + ticks);
 				frames = 0;
 				ticks = 0;
 			}

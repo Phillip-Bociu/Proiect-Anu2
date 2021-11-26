@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 import entities.Entity;
 import main.gfx.Screen;
 import tiles.Tile;
+import networking.*;
 
 public class Map {
 	private byte[] tiles;
@@ -19,6 +20,8 @@ public class Map {
 	public List<Entity> entities = new ArrayList<Entity>();
 	private String imagePath;
 	private BufferedImage image;
+	public static PlayerPacket lastReceivedPacket = new PlayerPacket();
+	public static PlayerPacket lastSentPacket = new PlayerPacket();
 	
 	public Map(String mapPath) {
 		if(mapPath !=null) {

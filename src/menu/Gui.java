@@ -21,7 +21,8 @@ public class Gui {
 		this.game = game;
 		this.input = input;
 		options = new ArrayList<String>();
-		options.add("Start");
+		options.add("Connect");
+		options.add("Host");
 		options.add("Exit");
 	}
 	public void tick() {
@@ -36,12 +37,19 @@ public class Gui {
 		}
 		if(input.enter.isPressed())
 		{
-			switch(option) {
+			switch(option) 
+			{
 			case 0:
 				game.initWorld();
+				game.Connect("26.176.53.192");
 				game.menu = false;
 				break;
 			case 1:
+				game.initWorld();
+				game.Host();
+				game.menu = false;
+				break;
+			case 2:
 				game.close();
 				break;
 			}
