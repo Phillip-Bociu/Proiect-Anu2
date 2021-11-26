@@ -14,8 +14,8 @@ public class BasicTile extends Tile {
 	 * @param tileColour
 	 * @param mapColour The rgb of the pixel from the map file
 	 */
-	public BasicTile(int id, int x, int y, int tileColour, int mapColour){
-		super(id, false, false, mapColour);
+	public BasicTile(int id, int damage, int x, int y, int tileColour, int mapColour){
+		super(id, damage, false, false, mapColour);
 		this.tileId = x + y*32;
 		this.tileColour = tileColour;
 	}

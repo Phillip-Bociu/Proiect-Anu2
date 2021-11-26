@@ -14,8 +14,8 @@ public class AnimatedTile extends BasicTile {
 	 * @param mapColour The rgb of the pixel from the map file
 	 * @param animationSwitchDelay Time in milliseconds between the frames
 	 */
-	public AnimatedTile(int id, int[][] animationCoords, int tileColour, int mapColour, int animationSwitchDelay) {
-		super(id, animationCoords[0][0], animationCoords[0][1], tileColour, mapColour);
+	public AnimatedTile(int id, int damage, int[][] animationCoords, int tileColour, int mapColour, int animationSwitchDelay) {
+		super(id, damage, animationCoords[0][0], animationCoords[0][1], tileColour, mapColour);
 		this.animationTileCoords = animationCoords;
 		this.lastIterationTime = System.currentTimeMillis();
 		this.animationSwitchDelay = animationSwitchDelay;

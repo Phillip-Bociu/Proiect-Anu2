@@ -2,7 +2,7 @@ package main.gfx;
 
 public class Font {
 	//All the characters that we'll use
-	private static String font = "ABCDEFGHIJKLMNOPQRSTUVWXYZ      " + "0123456789.,:;'\"!?$%()-=+/      ";
+	private static String font = "ABCDEFGHIJKLMNOPQRSTUVWXYZ      " + "0123456789.,:;'\"!?$%()-=+/>      ";
 	
 	/**
 	 * Render Function for the wanted message

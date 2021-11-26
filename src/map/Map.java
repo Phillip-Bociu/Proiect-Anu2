@@ -94,8 +94,8 @@ public class Map {
 	
 		screen.setOffset(xOffset, yOffset);
 		
-		for(int y=0;y<height;y++) {
-			for(int x=0;x<width;x++) {
+		for(int y=(yOffset>>4);y<(yOffset + screen.height >> 4) + 1;y++) {
+			for(int x=(xOffset>>4);x<(xOffset + screen.width >> 4) + 1;x++) {
 				getTile(x,y).render(screen,this,x<<4,y<<4);
 			}
 		}
@@ -108,7 +108,7 @@ public class Map {
 	}
 	
 	public Tile getTile(int x, int y) {
-		if(x < 0 || x>width || 0 > y || y>height) return Tile.VOID;
+		if(x < 0 || x>width-1 || y < 0 || y > height-1) return Tile.VOID;
 		return Tile.tiles[tiles[x+y*width]];
 	}
 	

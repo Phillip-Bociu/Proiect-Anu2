@@ -9,8 +9,8 @@ public class BasicSolidTile extends BasicTile{
 	 * @param tileColour
 	 * @param mapColour The rgb of the pixel from the map file
 	 */
-	public BasicSolidTile(int id, int x, int y, int tileColour,int mapColour) {
-		super(id, x, y, tileColour, mapColour);
+	public BasicSolidTile(int id, int damage, int x, int y, int tileColour,int mapColour) {
+		super(id, damage, x, y, tileColour, mapColour);
 		this.solid = true;
 	}
 

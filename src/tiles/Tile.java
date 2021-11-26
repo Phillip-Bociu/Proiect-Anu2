@@ -11,15 +11,16 @@ public abstract class Tile {
 	
 	//An array for all tiles
 	public static final Tile[] tiles = new Tile[256];
-	public static final Tile VOID = new BasicSolidTile(0, 0, 0, Colours.get(0, -1, -1, -1),0xFF000000);
-	public static final Tile STONE = new BasicSolidTile(1,1,0,Colours.get(-1, 333, -1, -1),0xFF555555);
-	public static final Tile GRASS = new BasicTile(2,2,0,Colours.get(-1, 131, 141, -1),0xFF00FF00);
-	public static final Tile SPAWN = new BasicTile(3,2,0,Colours.get(-1, 131, 141, -1),0xFF696969);//NICE
-	public static final Tile WATER = new AnimatedTile(4,new int[][] {{3,0},{4,0},{5,0},{6,0}},Colours.get(-1, 115, 105, -1),0xFF0000FF,900);
+	public static final Tile VOID = new BasicSolidTile(0,0, 0, 0, Colours.get(0, -1, -1, -1),0xFF000000);
+	public static final Tile STONE = new BasicSolidTile(1,0,1,0,Colours.get(-1, 333, -1, -1),0xFF555555);
+	public static final Tile GRASS = new BasicTile(2,0,2,0,Colours.get(-1, 131, 141, -1),0xFF00FF00);
+	public static final Tile SPAWN = new BasicTile(3,0,2,0,Colours.get(-1, 131, 141, -1),0xFF696969);//NICE
+	public static final Tile WATER = new AnimatedTile(4,1,new int[][] {{3,0},{4,0},{5,0},{6,0}},Colours.get(-1, 115, 105, -1),0xFF0000FF,900);
 	
 	protected byte id;
 	protected boolean solid;
 	protected boolean emitter;
+	protected int damage = 0;
 	private int mapColour;
 	
 	/**
@@ -28,11 +29,12 @@ public abstract class Tile {
 	 * @param isEmitter
 	 * @param colour
 	 */
-	public Tile(int id, boolean isSolid, boolean isEmitter, int colour) {
+	public Tile(int id, int damage, boolean isSolid, boolean isEmitter, int colour) {
 		this.id = (byte) id;
 		if(tiles[id]!=null) throw new RuntimeException("Duplicate tile id on " + id);
 		this.solid = isSolid;
 		this.emitter = isEmitter;
+		this.damage = damage;
 		tiles[id] = this;
 		this.mapColour = colour;
 	}
@@ -47,6 +49,9 @@ public abstract class Tile {
 	
 	public boolean isEmitter() {
 		return emitter;
+	}
+	public int getDamage() {
+		return damage;
 	}
 	public int getMapColour() {
 		return mapColour;

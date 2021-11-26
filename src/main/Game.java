@@ -17,6 +17,7 @@ import main.gfx.Font;
 import main.gfx.Screen;
 import main.gfx.SpriteSheet;
 import map.Map;
+import menu.Gui;
 
 
 /**
@@ -45,10 +46,13 @@ public class Game extends Canvas implements Runnable{
 	//we use 6 shades for every color r, g ,b
 	private int[] colours = new int[6*6*6];
 	
+	private Thread thread;
 	private Screen screen;
 	public InputH inputH;
 	public Map map;
 	public Player player;
+	public Gui gui;
+	public boolean menu = true;
 	
 	/**
 	 * Initializing some other variables, mostly JFrame stuff
@@ -94,6 +98,11 @@ public class Game extends Canvas implements Runnable{
 		
 		screen = new Screen(WIDTH,HEIGHT,new SpriteSheet("/sprite_sheet.png"));
 		inputH = new InputH(this);
+		gui = new Gui(this,inputH);
+	}
+	
+	public void initWorld()
+	{
 		map = new Map(mapPath);
 		player = new Player(map, 16*map.spawnX, 16*map.spawnY, inputH);
 		map.addEntity(player);
@@ -105,7 +114,8 @@ public class Game extends Canvas implements Runnable{
 	 */
 	public synchronized void start() {
 		running = true;
-		new Thread(this).start();
+		thread = new Thread(this);
+		thread.start();
 	}
 	
 	
@@ -113,6 +123,14 @@ public class Game extends Canvas implements Runnable{
 	 * Stopping the game(currently useless)
 	 */
 	public synchronized void stop() {	
+		try {
+			thread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	public void close() {
+		System.exit(0);
 	}
 	
 	/**
@@ -149,12 +167,7 @@ public class Game extends Canvas implements Runnable{
 				delta -= 1;
 				toggleRender = true;
 			}
-			
-			/*try {
-				Thread.sleep(2);
-			}catch(InterruptedException e) {
-				e.printStackTrace();
-			}*/
+
 			
 			if(toggleRender)
 			{
@@ -180,7 +193,11 @@ public class Game extends Canvas implements Runnable{
 	public void tick() {
 		tickCount++;
 		
-		map.tick();	
+		if(menu)
+			gui.tick();
+		else
+			map.tick();
+		
 	}
 	
 	/**
@@ -193,16 +210,19 @@ public class Game extends Canvas implements Runnable{
 			return;
 		}
 		
-		int xOffset = player.x - (screen.width/2);
-		int yOffset = player.y - (screen.height/2);
 		
-		map.renderTiles(screen, xOffset, yOffset);
 		
-		//String message = "Hell Yeah!!!";
-		//Font.render("GAME OVER", screen, screen.xOffset + screen.width/2 - message.length()*8, screen.yOffset + screen.height/2 - 16 + 8, Colours.get(-1,-1,-1,500),1);
-		player.renderHealth(screen);
+		if(menu)
+			gui.render(screen);
+		else
+		{
+			int xOffset = player.x - (screen.width/2);
+			int yOffset = player.y - (screen.height/2);
+			map.renderTiles(screen, xOffset, yOffset);
+			map.renderEntities(screen);
+			player.renderHealth(screen,3,screen.height - 16);
+		}
 		
-		map.renderEntities(screen);
 		
 		for(int y = 0;y<screen.height;y++) {
 			for(int x = 0;x<screen.width;x++) {
