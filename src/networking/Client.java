@@ -62,7 +62,6 @@ public class Client extends Thread
 			{
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

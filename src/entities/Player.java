@@ -1,14 +1,11 @@
 package entities;
 
 
-import java.util.ArrayList;
-import java.util.List;
 
 import main.InputH;
 import main.gfx.Colours;
 import main.gfx.Screen;
 import map.Map;
-import networking.PlayerPacket;
 
 public class Player extends Mob{
 	
@@ -17,8 +14,9 @@ public class Player extends Mob{
 	private int scale = 1;
 	private boolean isYou = true;
 	
-	public Player(Map map, int x, int y, InputH input, boolean isYou) {
-		super(map, "Player", x, y, 1);
+	public Player(Map map, int x, int y, InputH input, boolean isYou, int colour, String name) {
+		super(map, name, x, y, 1);
+		this.colour = colour;
 		this.input = input;	
 		this.speed = 2;
 		this.isYou = isYou;

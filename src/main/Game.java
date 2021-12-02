@@ -7,15 +7,12 @@ import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import entities.Player;
 import main.gfx.Colours;
-import main.gfx.Font;
 import main.gfx.Screen;
 import main.gfx.SpriteSheet;
 import map.Map;
@@ -117,11 +114,21 @@ public class Game extends Canvas implements Runnable{
 		gui = new Gui(this,inputH);
 	}
 	
-	public void initWorld()
+	/**
+	 * @param host true if the player is the host
+	 */
+	public void initWorld(boolean host)
 	{
 		map = new Map(mapPath);
-		player = new Player(map, 16*map.spawnX, 16*map.spawnY, inputH, true);
-		player2 = new Player(map, 16*map.spawnX, 16*map.spawnY, inputH, false);
+		if(host) {
+			player = new Player(map, 16*map.spawnX, 16*map.spawnY, inputH, true, Colours.get(-1,401,502,555), "Player 1");
+			player2 = new Player(map, 16*map.spawnX, 16*map.spawnY, inputH, false, Colours.get(-1,204,305,555), "Player 2");
+		}
+		else
+		{
+			player = new Player(map, 16*map.spawnX, 16*map.spawnY, inputH, true, Colours.get(-1,204,305,555), "Player 2");
+			player2 = new Player(map, 16*map.spawnX, 16*map.spawnY, inputH, false, Colours.get(-1,401,502,555), "Player 1");
+		}
 		map.addEntity(player);
 		map.addEntity(player2);
 	}
@@ -196,6 +203,7 @@ public class Game extends Canvas implements Runnable{
 			//reset number of frames and ticks to 0 every second so we can see fps and ticks per second
 			if(System.currentTimeMillis() - certainTimer >= 1000)
 			{
+				System.out.println("fps - " + frames + "    ticks - " + ticks);
 				certainTimer +=1000;
 				frames = 0;
 				ticks = 0;
@@ -238,6 +246,7 @@ public class Game extends Canvas implements Runnable{
 			map.renderTiles(screen, xOffset, yOffset);
 			map.renderEntities(screen);
 			player.renderHealth(screen,3,screen.height - 16);
+			player2.renderHealth(screen,screen.width - 17*10,screen.height - 16);
 		}
 		
 		
