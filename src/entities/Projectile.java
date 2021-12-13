@@ -6,12 +6,13 @@ import map.Map;
 
 public class Projectile extends Entity{
 	float speed = 0.3f;
-	int damage;
+	int damage=1;
 	float directionX,directionY;
-	public Projectile(Map map, float speed, int damage, float x, float y, int targetX, int targetY) {
+	int immunityID=0;
+	public Projectile(Map map,int immunityID, float speed, float x, float y, int targetX, int targetY) {
 		super(map);
+		this.immunityID = immunityID;
 		this.speed = speed;
-		this.damage = damage;
 		this.x = x;
 		this.y = y;
 		directionX = targetX - x;
@@ -27,11 +28,13 @@ public class Projectile extends Entity{
 		{
 			map.entities.remove(this);
 		}
-		if((y - map.entities.get(1).y > -14 && y - map.entities.get(1).y < 8) &&  (Math.abs(x - map.entities.get(1).x)) < 8  )
-		{
-			((Mob)(map.entities.get(1))).modifyHealth(-1);
-			map.entities.remove(this);
-		}
+		for(int i=0;i<map.entities.size() && map.entities.get(i).getClass()==Player.class;i++)
+			if(immunityID!=i && (y - map.entities.get(i).y > -14 && y - map.entities.get(i).y < 8) &&  (Math.abs(x - map.entities.get(i).x)) < 8  )
+				{
+					((Mob)(map.entities.get(i))).modifyHealth(-1);
+					map.entities.remove(this);
+					break;
+				}
 			
 	}
 	public void render(Screen screen) {

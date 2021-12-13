@@ -43,7 +43,7 @@ public class Player extends Mob{
 			if(input.left.isPressed()) xa--;
 			if(input.right.isPressed()) xa++;
 			if(input.leftClick.pressed()){
-				map.addEntity(new Projectile(map,2f,1,x,y,input.leftClick.getX()/Game.SCALE+screen.xOffset -8 ,input.leftClick.getY()/Game.SCALE + screen.yOffset -8));
+				map.addEntity(new Projectile(map,0,2f,x,y,input.leftClick.getX()/Game.SCALE+screen.xOffset -8 ,input.leftClick.getY()/Game.SCALE + screen.yOffset -8));
 			}
 			
 			if(xa !=0 || ya!=0) {
