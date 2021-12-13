@@ -217,7 +217,6 @@ public class Game extends Canvas implements Runnable{
 	 */
 	public void tick() {
 		tickCount++;
-		
 		if(menu)
 			gui.tick();
 		else

@@ -13,7 +13,7 @@ public abstract class Mob extends Entity {
 	protected boolean isMoving;
 	protected int movingDir = 1; // 0 up, 1 down, 2 left, 3 right
 	protected int scale = 1;
-	protected int health= 7;
+	protected int health= 10;
 	
 	 public Mob(Map map, String name, int x, int y, int speed) {
 		 super(map);
@@ -88,7 +88,10 @@ public abstract class Mob extends Entity {
 		 if(map.getTile(xPos>>4,yPos>>4).getDamage() > 0)
 				health -= map.getTile(xPos>>4,yPos>>4).getDamage();
 	 }
-	 
+	 public void modifyHealth(int x)
+	 {
+		health+=x;
+	 }
 	 public String getName() {
 		 return name;
 	 }
