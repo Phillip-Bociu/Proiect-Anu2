@@ -4,7 +4,7 @@ import main.gfx.Screen;
 import map.Map;
 
 public abstract class Entity {
-	 public int x,y;
+	 public float x,y;
 	 protected Map map;
 	 
 	 public Entity(Map map) {

@@ -8,7 +8,7 @@ import tiles.Tile;
 public abstract class Mob extends Entity {
 	
 	protected String name;
-	protected int speed;
+	protected float speed;
 	protected int numSteps = 0;
 	protected boolean isMoving;
 	protected int movingDir = 1; // 0 up, 1 down, 2 left, 3 right
@@ -23,15 +23,15 @@ public abstract class Mob extends Entity {
 		 this.speed = speed;
 	 }
 	 
-	 public void move(int xa, int ya) {
+	 public void move(float xa, float ya) {
 		 if(xa != 0 && ya != 0) {
-			 move(xa, 0);
-			 move(0, ya);
+			 move(xa*0.7f, 0);
+			 move(0, ya*0.7f);
 			 numSteps--;
 			 return;
 		 }
 		 numSteps++;
-		 if(!hasCollided(xa,ya)) {
+		 if(!hasCollided(Math.round(xa),Math.round(ya))) {
 			 if(ya < 0) movingDir = 0;
 			 if(ya > 0) movingDir = 1;
 			 if(xa < 0) movingDir = 2;
@@ -68,8 +68,8 @@ public abstract class Mob extends Entity {
 	 
 	 protected boolean isSolidTile(int xa, int ya, int x, int y) {
 		 if(map == null) return false;
-		 Tile lastTile = map.getTile((this.x + x)>>4, (this.y + y) >>4);
-		 Tile newTile = map.getTile((this.x + x + xa)>>4, (this.y + y + ya)>>4);
+		 Tile lastTile = map.getTile(((int)(this.x) + x)>>4, ((int)(this.y) + y) >>4);
+		 Tile newTile = map.getTile(((int)(this.x) + x + xa)>>4, ((int)(this.y) + y + ya)>>4);
 		 if(!lastTile.equals(newTile) && newTile.isSolid()) return true;
 		 return false;
 	 }

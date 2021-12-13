@@ -77,8 +77,8 @@ public class Map {
 	
 	public void tick() {
 		//Let the entities do their animation
-		for(Entity e : entities) {
-			e.tick();
+		for(int i=0; i<entities.size();i++) {
+			entities.get(i).tick();
 		}
 		
 		//Let the tiles do their animation

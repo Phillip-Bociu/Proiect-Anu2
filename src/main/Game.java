@@ -47,7 +47,6 @@ public class Game extends Canvas implements Runnable{
 	
 	private Thread thread;
 	private Screen screen;
-	public InputH inputH;
 	public Map map;
 	public Player player, player2;
 	public Gui gui;
@@ -110,8 +109,7 @@ public class Game extends Canvas implements Runnable{
 		}
 		
 		screen = new Screen(WIDTH,HEIGHT,new SpriteSheet("/sprite_sheet.png"));
-		inputH = new InputH(this);
-		gui = new Gui(this,inputH);
+		gui = new Gui(this,new InputH(this,true,true));
 	}
 	
 	/**
@@ -119,18 +117,20 @@ public class Game extends Canvas implements Runnable{
 	 */
 	public void initWorld(boolean host)
 	{
+		gui = null;
 		map = new Map(mapPath);
 		if(host) {
-			player = new Player(map, 16*map.spawnX, 16*map.spawnY, inputH, true, Colours.get(-1,401,502,555), "Player 1");
-			player2 = new Player(map, 16*map.spawnX, 16*map.spawnY, inputH, false, Colours.get(-1,204,305,555), "Player 2");
+			player = new Player(map, screen, 16*map.spawnX, 16*map.spawnY, new InputH(this,true,true), true, Colours.get(-1,401,502,555), "Player 1");
+			player2 = new Player(map, screen, 16*map.spawnX, 16*map.spawnY, new InputH(this,false,false), false, Colours.get(-1,204,305,555), "Player 2");
 		}
 		else
 		{
-			player = new Player(map, 16*map.spawnX, 16*map.spawnY, inputH, true, Colours.get(-1,204,305,555), "Player 2");
-			player2 = new Player(map, 16*map.spawnX, 16*map.spawnY, inputH, false, Colours.get(-1,401,502,555), "Player 1");
+			player = new Player(map, screen, 16*map.spawnX, 16*map.spawnY, new InputH(this,true,true), true, Colours.get(-1,204,305,555), "Player 2");
+			player2 = new Player(map, screen, 16*map.spawnX, 16*map.spawnY, new InputH(this,false,false), false, Colours.get(-1,401,502,555), "Player 1");
 		}
 		map.addEntity(player);
 		map.addEntity(player2);
+		//384 - 432
 	}
 	
 	
@@ -241,8 +241,8 @@ public class Game extends Canvas implements Runnable{
 			gui.render(screen);
 		else
 		{
-			int xOffset = player.x - (screen.width/2);
-			int yOffset = player.y - (screen.height/2);
+			int xOffset = (int)(player.x) - (screen.width/2);
+			int yOffset = (int)(player.y) - (screen.height/2);
 			map.renderTiles(screen, xOffset, yOffset);
 			map.renderEntities(screen);
 			player.renderHealth(screen,3,screen.height - 16);
