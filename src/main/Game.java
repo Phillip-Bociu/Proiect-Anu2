@@ -203,7 +203,7 @@ public class Game extends Canvas implements Runnable{
 			//reset number of frames and ticks to 0 every second so we can see fps and ticks per second
 			if(System.currentTimeMillis() - certainTimer >= 1000)
 			{
-				System.out.println("fps - " + frames + "    ticks - " + ticks);
+				//System.out.println("fps - " + frames + "    ticks - " + ticks);
 				certainTimer +=1000;
 				frames = 0;
 				ticks = 0;

@@ -8,6 +8,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import entities.Entity;
+import entities.Projectile;
 import main.gfx.Screen;
 import tiles.Tile;
 import networking.*;
@@ -20,8 +21,11 @@ public class Map {
 	public List<Entity> entities = new ArrayList<Entity>();
 	private String imagePath;
 	private BufferedImage image;
-	public static PlayerPacket lastReceivedPacket = new PlayerPacket();
-	public static PlayerPacket lastSentPacket = new PlayerPacket();
+	public static PlayerPacket lastReceivedPlayerPacket = new PlayerPacket();
+	public static PlayerPacket lastSentPlayerPacket = new PlayerPacket();
+	public static ProjectilePacket lastSentProjectilePacket = new ProjectilePacket();
+	public static ArrayList<ProjectilePacket> projQueue = new ArrayList<ProjectilePacket>();
+	
 	
 	public Map(String mapPath) {
 		if(mapPath !=null) {
@@ -77,6 +81,27 @@ public class Map {
 	
 	public void tick() {
 		//Let the entities do their animation
+		
+		synchronized(Map.projQueue)
+		{
+			if(Map.projQueue.size() != 0)
+			{
+				for(ProjectilePacket packet : Map.projQueue)
+				{
+					Projectile p = new Projectile(this);
+					p.x = packet.x;
+					p.y = packet.y;
+					p.damage = packet.damage;
+					p.speed = packet.speed;				
+					p.directionX = packet.dirX;
+					p.directionY = packet.dirY;
+					p.immunityID = 1;
+					entities.add(p);
+				}				
+				Map.projQueue.clear();
+			}
+		}
+		
 		for(int i=0; i<entities.size();i++) {
 			entities.get(i).tick();
 		}

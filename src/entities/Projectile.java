@@ -5,10 +5,22 @@ import main.gfx.Screen;
 import map.Map;
 
 public class Projectile extends Entity{
-	float speed = 0.3f;
-	int damage=1;
-	float directionX,directionY;
-	int immunityID=0;
+	public float speed = 0.3f;
+	public int damage=1;
+	public float directionX,directionY;
+	public int immunityID=0;
+	
+	public Projectile(Map map)
+	{
+		super(map);
+		this.immunityID = 0;
+		this.speed = 0;
+		this.x = 0;
+		this.y = 0;
+		this.directionX = 0;
+		this.directionY = 0;
+	}
+	
 	public Projectile(Map map,int immunityID, float speed, float x, float y, int targetX, int targetY) {
 		super(map);
 		this.immunityID = immunityID;

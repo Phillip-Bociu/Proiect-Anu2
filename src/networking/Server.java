@@ -8,6 +8,8 @@ import map.Map;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.util.ArrayDeque;
+import java.util.Queue;
 
 public class Server extends Thread
 {
@@ -40,22 +42,42 @@ public class Server extends Thread
 			e1.printStackTrace();
 		}
 		
+		ProjectilePacket proj = new ProjectilePacket();
+		
 		while(true)
 		{
 			
 			try {
-				synchronized(Map.lastSentPacket)
+				synchronized(Map.lastSentPlayerPacket)
 				{					
-					packet.setData(Map.lastSentPacket.toBytes());
+					packet.setData(Map.lastSentPlayerPacket.toBytes());
 				}
 				socket.send(packet);
-				
-				socket.receive(packet);
-				synchronized(Map.lastReceivedPacket)
-				{
-					Map.lastReceivedPacket.readFromBytes(packet.getData());
+	
+				synchronized(Map.lastSentProjectilePacket)
+				{					
+					packet.setData(Map.lastSentProjectilePacket.toBytes());
+					Map.lastSentProjectilePacket.speed = 0;
 				}
+				socket.send(packet);
+	
+				socket.receive(packet);
+				synchronized(Map.lastReceivedPlayerPacket)
+				{
+					Map.lastReceivedPlayerPacket.readFromBytes(packet.getData());
+				}
+				socket.receive(packet);
 				
+				proj.readFromBytes(packet.getData());
+				if(proj.speed != 0)
+					synchronized(Map.projQueue)
+					{
+						ProjectilePacket p = new ProjectilePacket();
+						p.readFromBytes(proj.toBytes());
+						Map.projQueue.add(p);
+					}
+				
+					
 			}catch (IOException e)
 			{
 				e.printStackTrace();

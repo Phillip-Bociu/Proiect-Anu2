@@ -43,7 +43,19 @@ public class Player extends Mob{
 			if(input.left.isPressed()) xa--;
 			if(input.right.isPressed()) xa++;
 			if(input.leftClick.pressed()){
-				map.addEntity(new Projectile(map,0,2f,x,y,input.leftClick.getX()/Game.SCALE+screen.xOffset -8 ,input.leftClick.getY()/Game.SCALE + screen.yOffset -8));
+				int targetX = input.leftClick.getX()/Game.SCALE+screen.xOffset - 8;
+				int targetY = input.leftClick.getY()/Game.SCALE + screen.yOffset -8;
+				Projectile p = new Projectile(map,0,2f,x,y, targetX, targetY);	
+				map.addEntity(p);
+				synchronized(Map.lastSentProjectilePacket)
+				{
+					Map.lastSentProjectilePacket.x = p.x;
+					Map.lastSentProjectilePacket.y = p.y;
+					Map.lastSentProjectilePacket.dirX = p.directionX;
+					Map.lastSentProjectilePacket.dirY = p.directionY;
+					Map.lastSentProjectilePacket.damage = p.damage;
+					Map.lastSentProjectilePacket.speed = p.speed;
+				}
 			}
 			
 			if(xa !=0 || ya!=0) {
@@ -52,26 +64,26 @@ public class Player extends Mob{
 			}else {
 				isMoving = false;
 			}
-			synchronized(Map.lastReceivedPacket)
+			synchronized(Map.lastReceivedPlayerPacket)
 			{				
-				Map.lastSentPacket.x = (int)(x);
-				Map.lastSentPacket.y = (int)(y);
-				Map.lastSentPacket.movingDir = movingDir;
-				Map.lastSentPacket.numSteps = numSteps;
+				Map.lastSentPlayerPacket.x = (int)(x);
+				Map.lastSentPlayerPacket.y = (int)(y);
+				Map.lastSentPlayerPacket.movingDir = movingDir;
+				Map.lastSentPlayerPacket.numSteps = numSteps;
 			}
 		} else
 		{
 			// x, y, movingDir, numSteps
-			synchronized(Map.lastReceivedPacket)
+			synchronized(Map.lastReceivedPlayerPacket)
 			{				
-				if(Map.lastReceivedPacket.x != -1)
-					x = Map.lastReceivedPacket.x;
-				if(Map.lastReceivedPacket.y != -1)	
-					y = Map.lastReceivedPacket.y;
-				if(Map.lastReceivedPacket.movingDir != -1)
-					movingDir = Map.lastReceivedPacket.movingDir;
-				if(Map.lastReceivedPacket.numSteps != -1)
-					numSteps = Map.lastReceivedPacket.numSteps;
+				if(Map.lastReceivedPlayerPacket.x != -1)
+					x = Map.lastReceivedPlayerPacket.x;
+				if(Map.lastReceivedPlayerPacket.y != -1)	
+					y = Map.lastReceivedPlayerPacket.y;
+				if(Map.lastReceivedPlayerPacket.movingDir != -1)
+					movingDir = Map.lastReceivedPlayerPacket.movingDir;
+				if(Map.lastReceivedPlayerPacket.numSteps != -1)
+					numSteps = Map.lastReceivedPlayerPacket.numSteps;
 			}
 		}
 		

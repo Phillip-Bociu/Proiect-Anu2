@@ -34,9 +34,9 @@ public class Client extends Thread
 		DatagramPacket packet = new DatagramPacket(data, data.length, ipAddress, 1331);
 		
 		try {
-			synchronized(Map.lastSentPacket)
+			synchronized(Map.lastSentPlayerPacket)
 			{					
-				packet.setData(Map.lastSentPacket.toBytes());
+				packet.setData(Map.lastSentPlayerPacket.toBytes());
 			}
 			socket.send(packet);
 
@@ -44,18 +44,35 @@ public class Client extends Thread
 			e1.printStackTrace();
 		}
 		
+		ProjectilePacket proj = new ProjectilePacket();
+		
 		while(true)
 		{
 			try {
 				socket.receive(packet);
-				synchronized(Map.lastReceivedPacket)
+				synchronized(Map.lastReceivedPlayerPacket)
 				{
-					Map.lastReceivedPacket.readFromBytes(packet.getData());
+					Map.lastReceivedPlayerPacket.readFromBytes(packet.getData());
 				}
+				socket.receive(packet);
+				proj.readFromBytes(packet.getData());
+				if(proj.speed != 0)
+					synchronized(Map.projQueue)
+					{
+						ProjectilePacket p = new ProjectilePacket();
+						p.readFromBytes(proj.toBytes());
+						Map.projQueue.add(p);
+					}
 				
-				synchronized(Map.lastSentPacket)
+				synchronized(Map.lastSentPlayerPacket)
 				{					
-					packet.setData(Map.lastSentPacket.toBytes());
+					packet.setData(Map.lastSentPlayerPacket.toBytes());
+				}
+				socket.send(packet);
+				synchronized(Map.lastSentProjectilePacket)
+				{
+					packet.setData(Map.lastSentProjectilePacket.toBytes());
+					Map.lastSentProjectilePacket.speed = 0;
 				}
 				socket.send(packet);
 			}catch (IOException e)
