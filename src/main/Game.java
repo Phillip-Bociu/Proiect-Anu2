@@ -55,7 +55,7 @@ public class Game extends Canvas implements Runnable{
 	public Client client;
 	public Server server;
 	public String fpsCounter;
-	public boolean menu, sMessage;
+	public boolean menu, sMessage, host;
 	
 	/**
 	 * Initializing some other variables, mostly JFrame stuff
@@ -136,7 +136,11 @@ public class Game extends Canvas implements Runnable{
 	}
 	public void initWorld(boolean host)
 	{
+		this.host = host;
+		menu = false;
 		gui = null;
+		sMessage = false;
+		screenMessage = null;
 		map = new Map(mapPath,this);
 		if(host) {
 			player = new Player(map, screen, 16*map.spawnX, 16*map.spawnY, new InputH(this,true,true), true, Colours.get(-1,401,502,555), "Player 1");

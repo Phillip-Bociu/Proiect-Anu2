@@ -23,7 +23,7 @@ public class ScreenMessage {
 		this.input = input;
 		this.message = message;
 		options = new ArrayList<String>();
-		options.add("Return to Main Menu");
+		options.add("Play Again");
 		options.add("Exit");
 	}
 	public void tick() {
@@ -38,9 +38,11 @@ public class ScreenMessage {
 		}
 		if(input.enter.isPressed())
 		{
+			
 			switch(option) 
 			{
 			case 0:
+				game.initWorld(game.host);
 				break;
 			case 1:
 				game.close();
