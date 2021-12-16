@@ -12,14 +12,16 @@ import main.gfx.Screen;
 public class ScreenMessage {
 	private InputH input;
 	Game game;
+	String message;
 	
 	int option = 0;
 	List<String> options;
 	boolean walker = false;
-	public ScreenMessage(Game game,InputH input)
+	public ScreenMessage(Game game, String message, InputH input)
 	{
 		this.game = game;
 		this.input = input;
+		this.message = message;
 		options = new ArrayList<String>();
 		options.add("Return to Main Menu");
 		options.add("Exit");
@@ -55,6 +57,7 @@ public class ScreenMessage {
 				screen.render(x, y, 0, Colours.get(000,000,000,000), 1);
 		
 		Font.render("GAME OVER", screen, screen.width/2 - 4*16*2, screen.height/2-16*5, Colours.get(-1,555,555,555), 2);
+		Font.render(message, screen, screen.width/2 - 4*16*2 + message.length()/2, screen.height/2-16*5 + 32, Colours.get(-1,555,555,555), 1);
 		for(int i=0;i<options.size();i++)
 			if(i == option)
 				Font.render(">" + options.get(i), screen, screen.width/2 -16*10, 96 + i*16, Colours.get(-1,555,555,555), 1);

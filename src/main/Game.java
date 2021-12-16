@@ -126,13 +126,13 @@ public class Game extends Canvas implements Runnable{
 		screenMessage = null;
 		gui = new Gui(this,new InputH(this,true,false));
 	}
-	public void initScreenMessage()
+	public void initScreenMessage(String message)
 	{
 		screen.xOffset = 0;
 		screen.yOffset = 0;
 		sMessage = true;
 		map=null;
-		screenMessage = new ScreenMessage(this,new InputH(this,true,false));
+		screenMessage = new ScreenMessage(this,message,new InputH(this,true,false));
 	}
 	public void initWorld(boolean host)
 	{

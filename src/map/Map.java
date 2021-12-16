@@ -108,7 +108,14 @@ public class Map {
 		
 		for(int i=0; i<entities.size();i++) {
 			if(entities.get(i).getClass() == Player.class && ((Player)(entities.get(i))).health <=0)
-				game.initScreenMessage();
+			{
+				String message;
+				if(i==1)
+					message = "YOU WIN";
+				else
+					message = "YOU LOSE";
+				game.initScreenMessage(message);
+			}
 			entities.get(i).tick();
 		}
 		
