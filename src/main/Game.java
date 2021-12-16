@@ -95,7 +95,6 @@ public class Game extends Canvas implements Runnable{
 	 * Method to initialize the game with canvas and bond it with the input handler
 	 */
 	public void init() {
-		
 		//register every colour in array
 		int index = 0;
 		for(int r = 0;r<6;r++) {
@@ -143,13 +142,13 @@ public class Game extends Canvas implements Runnable{
 		screenMessage = null;
 		map = new Map(mapPath,this);
 		if(host) {
-			player = new Player(map, screen, 16*map.spawnX, 16*map.spawnY, new InputH(this,true,true), true, Colours.get(-1,401,502,555), "Player 1");
-			player2 = new Player(map, screen, 16*map.spawnX, 16*map.spawnY, new InputH(this,false,false), false, Colours.get(-1,204,305,555), "Player 2");
+			player = new Player(map, screen, 16*map.spawnX[0], 16*map.spawnY[0], new InputH(this,true,true), true, Colours.get(-1,401,502,555), "Player 1");
+			player2 = new Player(map, screen, 16*map.spawnX[1], 16*map.spawnY[1], new InputH(this,false,false), false, Colours.get(-1,204,305,555), "Player 2");
 		}
 		else
 		{
-			player = new Player(map, screen, 16*map.spawnX, 16*map.spawnY, new InputH(this,true,true), true, Colours.get(-1,204,305,555), "Player 2");
-			player2 = new Player(map, screen, 16*map.spawnX, 16*map.spawnY, new InputH(this,false,false), false, Colours.get(-1,401,502,555), "Player 1");
+			player = new Player(map, screen, 16*map.spawnX[1], 16*map.spawnY[1], new InputH(this,true,true), true, Colours.get(-1,204,305,555), "Player 2");
+			player2 = new Player(map, screen, 16*map.spawnX[0], 16*map.spawnY[0], new InputH(this,false,false), false, Colours.get(-1,401,502,555), "Player 1");
 		}
 		map.addEntity(player);
 		map.addEntity(player2);

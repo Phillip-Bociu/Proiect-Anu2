@@ -45,7 +45,7 @@ public class Player extends Mob{
 			if(input.leftClick.pressed()){
 				int targetX = input.leftClick.getX()/Game.SCALE+screen.xOffset - 8;
 				int targetY = input.leftClick.getY()/Game.SCALE + screen.yOffset -8;
-				Projectile p = new Projectile(map,0,6f,x,y, targetX, targetY);	
+				Projectile p = new Projectile(map,0,6f,x,y, targetX, targetY);
 				map.addEntity(p);
 				synchronized(Map.lastSentProjectilePacket)
 				{

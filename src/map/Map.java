@@ -19,7 +19,7 @@ public class Map {
 	private byte[] tiles;
 	public int width;
 	public int height;
-	public int spawnX = 0,spawnY = 0;
+	public int[] spawnX,spawnY;
 	public List<Entity> entities = new ArrayList<Entity>();
 	private String imagePath;
 	private BufferedImage image;
@@ -32,6 +32,12 @@ public class Map {
 	
 	public Map(String mapPath, Game game) {
 		if(mapPath !=null) {
+			spawnX = new int[2];
+			spawnY = new int[2];
+			spawnX[0]=0;
+			spawnX[1]=0;
+			spawnY[0]=0;
+			spawnY[1]=0;
 			this.game = game;
 			this.imagePath = mapPath;
 			this.loadMapFromFile();
@@ -60,6 +66,7 @@ public class Map {
 	private void loadTiles() {
 		//read the rbg values of the pixels
 		int[] tileColours = this.image.getRGB(0, 0, width, height, null, 0, width);
+		int k=0;
 		for(int y =0; y<height; y++){
 			for(int x =0; x<width;x++) {
 				tileCheck : for(Tile t: Tile.tiles) {
@@ -67,8 +74,9 @@ public class Map {
 						this.tiles[x+y*width] = t.getId();
 						//If the id of the tile is 3, then remember that spot for spawn point
 						if(t.getId()==3){
-							spawnX = x;
-							spawnY = y;
+							spawnX[k] = x;
+							spawnY[k] = y;
+							k++;
 						}
 						break tileCheck;
 					}

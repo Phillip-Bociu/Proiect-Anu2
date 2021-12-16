@@ -132,8 +132,7 @@ public class InputH implements KeyListener, MouseInputListener{
 	}
 
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub	
 	}
 
 	public void mouseExited(MouseEvent e) {
@@ -143,12 +142,10 @@ public class InputH implements KeyListener, MouseInputListener{
 
 	public void mouseDragged(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
 
 
 	public void mouseMoved(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
 }
