@@ -17,6 +17,7 @@ import main.gfx.Screen;
 import main.gfx.SpriteSheet;
 import map.Map;
 import menu.Gui;
+import menu.ScreenMessage;
 import networking.*;
 
 /**
@@ -50,9 +51,11 @@ public class Game extends Canvas implements Runnable{
 	public Map map;
 	public Player player, player2;
 	public Gui gui;
+	public ScreenMessage screenMessage;
 	public Client client;
 	public Server server;
-	public boolean menu = true;
+	public String fpsCounter;
+	public boolean menu, sMessage;
 	
 	/**
 	 * Initializing some other variables, mostly JFrame stuff
@@ -109,16 +112,32 @@ public class Game extends Canvas implements Runnable{
 		}
 		
 		screen = new Screen(WIDTH,HEIGHT,new SpriteSheet("/sprite_sheet.png"));
-		gui = new Gui(this,new InputH(this,true,true));
+		initGui();
 	}
 	
 	/**
 	 * @param host true if the player is the host
 	 */
+	public void initGui()
+	{
+		screen.xOffset = 0;
+		screen.yOffset = 0;
+		menu = true;
+		screenMessage = null;
+		gui = new Gui(this,new InputH(this,true,false));
+	}
+	public void initScreenMessage()
+	{
+		screen.xOffset = 0;
+		screen.yOffset = 0;
+		sMessage = true;
+		map=null;
+		screenMessage = new ScreenMessage(this,new InputH(this,true,false));
+	}
 	public void initWorld(boolean host)
 	{
 		gui = null;
-		map = new Map(mapPath);
+		map = new Map(mapPath,this);
 		if(host) {
 			player = new Player(map, screen, 16*map.spawnX, 16*map.spawnY, new InputH(this,true,true), true, Colours.get(-1,401,502,555), "Player 1");
 			player2 = new Player(map, screen, 16*map.spawnX, 16*map.spawnY, new InputH(this,false,false), false, Colours.get(-1,204,305,555), "Player 2");
@@ -203,7 +222,8 @@ public class Game extends Canvas implements Runnable{
 			//reset number of frames and ticks to 0 every second so we can see fps and ticks per second
 			if(System.currentTimeMillis() - certainTimer >= 1000)
 			{
-				//System.out.println("fps - " + frames + "    ticks - " + ticks);
+				fpsCounter = "fps - " + frames + "    ticks - " + ticks;
+				//System.out.println(fpsCounter);
 				certainTimer +=1000;
 				frames = 0;
 				ticks = 0;
@@ -219,6 +239,8 @@ public class Game extends Canvas implements Runnable{
 		tickCount++;
 		if(menu)
 			gui.tick();
+		else if(sMessage)
+			screenMessage.tick();
 		else
 			map.tick();
 		
@@ -233,11 +255,10 @@ public class Game extends Canvas implements Runnable{
 			createBufferStrategy(3);
 			return;
 		}
-		
-		
-		
 		if(menu)
 			gui.render(screen);
+		else if(sMessage)
+			screenMessage.render(screen);
 		else
 		{
 			int xOffset = (int)(player.x) - (screen.width/2);

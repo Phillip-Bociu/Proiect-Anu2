@@ -13,7 +13,7 @@ public abstract class Mob extends Entity {
 	protected boolean isMoving;
 	protected int movingDir = 1; // 0 up, 1 down, 2 left, 3 right
 	protected int scale = 1;
-	protected int health= 10;
+	public int health= 10;
 	
 	 public Mob(Map map, String name, int x, int y, int speed) {
 		 super(map);

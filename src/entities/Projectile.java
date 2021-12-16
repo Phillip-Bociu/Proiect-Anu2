@@ -5,7 +5,7 @@ import main.gfx.Screen;
 import map.Map;
 
 public class Projectile extends Entity{
-	public float speed = 0.3f;
+	public float speed = 2f;
 	public int damage=1;
 	public float directionX,directionY;
 	public int immunityID=0;
@@ -29,9 +29,11 @@ public class Projectile extends Entity{
 		this.y = y;
 		directionX = targetX - x;
 		directionY = targetY - y;
-		double stabilizer = Math.sqrt((directionX*directionX + directionY*directionY)/(speed*speed));
+		double stabilizer = Math.sqrt(directionX*directionX + directionY*directionY);
 		directionX /=stabilizer;
 		directionY /=stabilizer;
+		directionX *=speed;
+		directionY *=speed;
 	}
 	public void tick() {
 		x+=directionX;

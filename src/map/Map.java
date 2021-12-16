@@ -8,7 +8,9 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import entities.Entity;
+import entities.Player;
 import entities.Projectile;
+import main.Game;
 import main.gfx.Screen;
 import tiles.Tile;
 import networking.*;
@@ -21,14 +23,16 @@ public class Map {
 	public List<Entity> entities = new ArrayList<Entity>();
 	private String imagePath;
 	private BufferedImage image;
+	Game game;
 	public static PlayerPacket lastReceivedPlayerPacket = new PlayerPacket();
 	public static PlayerPacket lastSentPlayerPacket = new PlayerPacket();
 	public static ProjectilePacket lastSentProjectilePacket = new ProjectilePacket();
 	public static ArrayList<ProjectilePacket> projQueue = new ArrayList<ProjectilePacket>();
 	
 	
-	public Map(String mapPath) {
+	public Map(String mapPath, Game game) {
 		if(mapPath !=null) {
+			this.game = game;
 			this.imagePath = mapPath;
 			this.loadMapFromFile();
 		}
@@ -103,6 +107,8 @@ public class Map {
 		}
 		
 		for(int i=0; i<entities.size();i++) {
+			if(entities.get(i).getClass() == Player.class && ((Player)(entities.get(i))).health <=0)
+				game.initScreenMessage();
 			entities.get(i).tick();
 		}
 		
