@@ -7,7 +7,7 @@ import tiles.Tile;
 
 public abstract class Mob extends Entity {
 	
-	protected String name;
+	public String name;
 	protected float speed;
 	protected int numSteps = 0;
 	protected boolean isMoving;

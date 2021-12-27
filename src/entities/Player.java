@@ -5,6 +5,7 @@ package entities;
 import main.Game;
 import main.InputH;
 import main.gfx.Colours;
+import main.gfx.Font;
 import main.gfx.Screen;
 import map.Map;
 
@@ -16,8 +17,9 @@ public class Player extends Mob{
 	private boolean isYou = true;
 	Screen screen;
 	
-	public Player(Map map, Screen screen, int x, int y, InputH input, boolean isYou, int colour, String name) {
+	public Player(Map map, String name, Screen screen, int x, int y, InputH input, boolean isYou, int colour) {
 		super(map, name, x, y, 1);
+		this.name = name;
 		this.colour = colour;
 		this.input = input;	
 		this.speed = 2f;
@@ -112,5 +114,8 @@ public class Player extends Mob{
 		screen.render(xOffset + modifier*flip, yOffset + modifier, xTile + (yTile + 1) * 32,colour,toBool(flip),false, scale);
 		screen.render(xOffset  + modifier*(1-flip), yOffset  + modifier, xTile + 1 + (yTile + 1) * 32, colour,toBool(flip),false, scale);
 	}
+	public void renderName(Screen screen, int xPos, int yPos){
+		Font.render(this.name, screen, xPos + screen.xOffset, yPos + screen.yOffset, Colours.get(-1,401,502,555), 1);
+	 }
 	
 }

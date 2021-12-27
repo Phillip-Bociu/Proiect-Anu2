@@ -58,13 +58,13 @@ public class ScreenMessage {
 			for(int x=0;x<screen.width;x+=16)
 				screen.render(x, y, 0, Colours.get(000,000,000,000), 1);
 		
-		Font.render("GAME OVER", screen, screen.width/2 - 4*16*2, screen.height/2-16*5, Colours.get(-1,555,555,555), 2);
-		Font.render(message, screen, screen.width/2 - message.length()/2 *16, screen.height/2-16*5 + 32, Colours.get(-1,555,555,555), 1);
+		Font.render("GAME OVER", screen, screen.width/2 - 4*16*2, 40, Colours.get(-1,555,555,555), 2);
+		Font.render(message, screen, screen.width/2 - message.length()/2 *16, 40 + 32, Colours.get(-1,555,555,555), 1);
 		for(int i=0;i<options.size();i++)
 			if(i == option)
-				Font.render(">" + options.get(i), screen, screen.width/2 -16*10, 96 + i*16, Colours.get(-1,555,555,555), 1);
+				Font.render(">" + options.get(i), screen, screen.width/2 -16*10, 112 + i*16, Colours.get(-1,555,555,555), 1);
 			else
-				Font.render(options.get(i), screen, screen.width/2 -16*10 + 16, 96 + i*16, Colours.get(-1,555,555,555), 1);
+				Font.render(options.get(i), screen, screen.width/2 -16*10 + 16, 112 + i*16, Colours.get(-1,555,555,555), 1);
 	}
 }
 

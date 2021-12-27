@@ -17,6 +17,7 @@ import main.gfx.Screen;
 import main.gfx.SpriteSheet;
 import map.Map;
 import menu.Gui;
+import menu.Lobby;
 import menu.ScreenMessage;
 import networking.*;
 
@@ -24,6 +25,12 @@ import networking.*;
  * Main class that operates the game
  *
  */
+enum gameState{
+	battle,
+	menu,
+	gameOver,
+	lobby
+}
 public class Game extends Canvas implements Runnable{
 	
 	private static final long serialVersionUID = 1L;
@@ -52,10 +59,13 @@ public class Game extends Canvas implements Runnable{
 	public Player player, player2;
 	public Gui gui;
 	public ScreenMessage screenMessage;
+	public Lobby lobby;
 	public Client client;
 	public Server server;
 	public String fpsCounter;
-	public boolean menu, sMessage, host;
+	public boolean host;
+	public gameState state;
+	public Account account;
 	
 	/**
 	 * Initializing some other variables, mostly JFrame stuff
@@ -111,7 +121,9 @@ public class Game extends Canvas implements Runnable{
 		}
 		
 		screen = new Screen(WIDTH,HEIGHT,new SpriteSheet("/sprite_sheet.png"));
+		account = new Account("JohnSeed",312);
 		initGui();
+		
 	}
 	
 	/**
@@ -121,34 +133,41 @@ public class Game extends Canvas implements Runnable{
 	{
 		screen.xOffset = 0;
 		screen.yOffset = 0;
-		menu = true;
+		state = gameState.menu;
 		screenMessage = null;
 		gui = new Gui(this,new InputH(this,true,false));
+	}
+	public void initLobby(boolean host)
+	{
+		screen.xOffset = 0;
+		screen.yOffset = 0;
+		state = gameState.lobby;
+		screenMessage = null;
+		gui = null;
+		lobby = new Lobby(this, host);
 	}
 	public void initScreenMessage(String message)
 	{
 		screen.xOffset = 0;
 		screen.yOffset = 0;
-		sMessage = true;
+		state = gameState.gameOver;
 		map=null;
 		screenMessage = new ScreenMessage(this,message,new InputH(this,true,false));
 	}
 	public void initWorld(boolean host)
 	{
 		this.host = host;
-		menu = false;
-		gui = null;
-		sMessage = false;
-		screenMessage = null;
+		state = gameState.battle;
+		lobby = null;
 		map = new Map(mapPath,this);
 		if(host) {
-			player = new Player(map, screen, 16*map.spawnX[0], 16*map.spawnY[0], new InputH(this,true,true), true, Colours.get(-1,401,502,555), "Player 1");
-			player2 = new Player(map, screen, 16*map.spawnX[1], 16*map.spawnY[1], new InputH(this,false,false), false, Colours.get(-1,204,305,555), "Player 2");
+			player = new Player(map, account.username, screen, 16*map.spawnX[0], 16*map.spawnY[0], new InputH(this,true,true), true, Colours.get(-1,401,502,555));
+			player2 = new Player(map, "Player 2", screen, 16*map.spawnX[1], 16*map.spawnY[1], new InputH(this,false,false), false, Colours.get(-1,204,305,555));
 		}
 		else
 		{
-			player = new Player(map, screen, 16*map.spawnX[1], 16*map.spawnY[1], new InputH(this,true,true), true, Colours.get(-1,204,305,555), "Player 2");
-			player2 = new Player(map, screen, 16*map.spawnX[0], 16*map.spawnY[0], new InputH(this,false,false), false, Colours.get(-1,401,502,555), "Player 1");
+			player = new Player(map, account.username, screen, 16*map.spawnX[1], 16*map.spawnY[1], new InputH(this,true,true), true, Colours.get(-1,204,305,555));
+			player2 = new Player(map, "Player 2", screen, 16*map.spawnX[0], 16*map.spawnY[0], new InputH(this,false,false), false, Colours.get(-1,401,502,555));
 		}
 		map.addEntity(player);
 		map.addEntity(player2);
@@ -240,13 +259,30 @@ public class Game extends Canvas implements Runnable{
 	 */
 	public void tick() {
 		tickCount++;
-		if(menu)
-			gui.tick();
-		else if(sMessage)
-			screenMessage.tick();
-		else
-			map.tick();
-		
+		switch(state){
+			case menu:
+			{
+				gui.tick();
+				break;
+			}
+			case lobby:
+			{
+				lobby.tick();
+				break;
+			}
+			case battle:
+			{
+				map.tick();
+				break;
+			}
+			case gameOver:
+			{
+				screenMessage.tick();
+				break;
+			}
+		default:
+			break;
+		}
 	}
 	
 	/**
@@ -258,20 +294,37 @@ public class Game extends Canvas implements Runnable{
 			createBufferStrategy(3);
 			return;
 		}
-		if(menu)
-			gui.render(screen);
-		else if(sMessage)
-			screenMessage.render(screen);
-		else
-		{
-			int xOffset = (int)(player.x) - (screen.width/2);
-			int yOffset = (int)(player.y) - (screen.height/2);
-			map.renderTiles(screen, xOffset, yOffset);
-			map.renderEntities(screen);
-			player.renderHealth(screen,3,screen.height - 16);
-			player2.renderHealth(screen,screen.width - 17*10,screen.height - 16);
+		switch(state){
+			case menu:
+			{
+				gui.render(screen);
+				break;
+			}
+			case lobby:
+			{
+				lobby.render(screen);
+				break;
+			}
+			case battle:
+			{
+				int xOffset = (int)(player.x) - (screen.width/2);
+				int yOffset = (int)(player.y) - (screen.height/2);
+				map.renderTiles(screen, xOffset, yOffset);
+				map.renderEntities(screen);
+				player.renderHealth(screen,3,screen.height - 16);
+				player.renderName(screen,1,1);
+				player2.renderHealth(screen,screen.width - 17*10,screen.height - 16);
+				player2.renderName(screen,screen.width - player2.name.length()*16,1);
+				break;
+			}
+			case gameOver:
+			{
+				screenMessage.render(screen);
+				break;
+			}
+			default:
+				break;
 		}
-		
 		
 		for(int y = 0;y<screen.height;y++) {
 			for(int x = 0;x<screen.width;x++) {

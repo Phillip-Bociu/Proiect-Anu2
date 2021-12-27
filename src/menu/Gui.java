@@ -40,11 +40,11 @@ public class Gui {
 			switch(option) 
 			{
 			case 0:
-				game.initWorld(false);
+				game.initLobby(false);
 				game.Connect("26.176.53.192"); // IP of the server
 				break;
 			case 1:
-				game.initWorld(true);
+				game.initLobby(true);
 				game.Host();
 				break;
 			case 2:
