@@ -7,7 +7,6 @@ import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -379,11 +378,12 @@ public class Game extends Canvas implements Runnable{
 	
 	public static void main(String args[]) {
 		
-		Login frame = new Login("127.0.0.1");
-        frame.setTitle("Login Form");
+		Login frame = new Login("26.176.53.192");
+        frame.setTitle("Login Menu");
         frame.setVisible(true);
-        frame.setBounds(700, 200, 370, 600);
+        frame.setBounds(400, 200, 370, 280);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setIconImage(new ImageIcon(ICON).getImage());
         frame.setResizable(false);
 	//	new Game().start();
 	}

@@ -1,7 +1,6 @@
 package menu;
 
 import java.net.DatagramPacket;
-import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.List;
 
@@ -43,6 +42,8 @@ public class Lobby {
 			game.socket.receive(packet);
 			lp = new LobbyPacket();
 			lp.readFromBytes(packet.getData());
+			System.out.println(lp.packetID);
+			System.out.println(lp.otherIp);
 			if(lp.packetID == PacketID.Connect)
 				host = false;
 			else if(lp.packetID == PacketID.Host)
@@ -62,12 +63,22 @@ public class Lobby {
 		{
 			System.out.println(lp.packetID);
 			System.out.println(lp.otherIp);
-
-			game.initWorld(host);
+			
 			if(host)
 				game.Host();
 			else
+			{
 				game.Connect(lp.otherIp);
+			
+			
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			game.initWorld(host);
 		}
 		
 		//TODO: handle player disconnect

@@ -8,8 +8,6 @@ import map.Map;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.util.ArrayDeque;
-import java.util.Queue;
 
 public class Server extends Thread
 {
@@ -22,7 +20,7 @@ public class Server extends Thread
 	{
 		try {
 			
-			this.socket = new DatagramSocket(1331);
+			this.socket = new DatagramSocket(1000);
 			
 		} catch (SocketException e) {
 			e.printStackTrace();

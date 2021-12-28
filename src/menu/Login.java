@@ -11,13 +11,9 @@ import networking.RegisterPacket;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-import java.sql.*;
 
 public class Login extends JFrame implements ActionListener {
 
@@ -30,7 +26,6 @@ public class Login extends JFrame implements ActionListener {
 	JButton loginButton = new JButton("LOGIN");
 	JButton resetButton = new JButton("RESET");
 	JButton registerButton = new JButton("Register");
-	JCheckBox showPassword = new JCheckBox("Show Password");
 
 	InetAddress ipAddress;
 	DatagramSocket socket;
@@ -54,14 +49,13 @@ public class Login extends JFrame implements ActionListener {
 	}
 
 	public void setLocationAndSize() {
-		usernameLabel.setBounds(50, 150, 100, 30);
-		passwordLabel.setBounds(50, 220, 100, 30);
-		userTextField.setBounds(150, 150, 150, 30);
-		passwordField.setBounds(150, 220, 150, 30);
-		showPassword.setBounds(150, 250, 150, 30);
-		loginButton.setBounds(50, 300, 100, 30);
-		resetButton.setBounds(200, 300, 100, 30);
-		registerButton.setBounds(125, 400, 100, 30);
+		usernameLabel.setBounds(50, 20, 100, 30);
+		passwordLabel.setBounds(50, 60, 100, 30);
+		userTextField.setBounds(150, 20, 150, 30);
+		passwordField.setBounds(150, 60, 150, 30);
+		loginButton.setBounds(50, 120, 100, 30);
+		resetButton.setBounds(200, 120, 100, 30);
+		registerButton.setBounds(125, 170, 100, 30);
 
 	}
 
@@ -70,7 +64,6 @@ public class Login extends JFrame implements ActionListener {
 		container.add(passwordLabel);
 		container.add(userTextField);
 		container.add(passwordField);
-		container.add(showPassword);
 		container.add(loginButton);
 		container.add(resetButton);
 		container.add(registerButton);
@@ -79,7 +72,6 @@ public class Login extends JFrame implements ActionListener {
 	public void addActionEvent() {
 		loginButton.addActionListener(this);
 		resetButton.addActionListener(this);
-		showPassword.addActionListener(this);
 		registerButton.addActionListener(this);
 	}
 
@@ -88,7 +80,7 @@ public class Login extends JFrame implements ActionListener {
 		final Object src = e.getSource();
 		if (src == loginButton) {
 
-			LoginPacket loginPacket = new LoginPacket(userTextField.getText(), passwordField.getText());
+			LoginPacket loginPacket = new LoginPacket(userTextField.getText(), String.valueOf(passwordField.getPassword()));
 
 			byte[] data = new byte[1024];
 			DatagramPacket packet = new DatagramPacket(data, data.length, ipAddress, 1331);
@@ -118,7 +110,7 @@ public class Login extends JFrame implements ActionListener {
 			userTextField.setText("");
 			passwordField.setText("");
 		} else if (src == registerButton) {
-			RegisterPacket rp = new RegisterPacket(userTextField.getText(), passwordField.getText());
+			RegisterPacket rp = new RegisterPacket(userTextField.getText(), String.valueOf(passwordField.getPassword()));
 
 			byte[] data = new byte[1024];
 			DatagramPacket packet = new DatagramPacket(data, data.length, ipAddress, 1331);

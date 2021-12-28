@@ -31,7 +31,7 @@ public class Client extends Thread
 	public void run()
 	{
 		byte[] data = new byte[1024];
-		DatagramPacket packet = new DatagramPacket(data, data.length, ipAddress, 1331);
+		DatagramPacket packet = new DatagramPacket(data, data.length, ipAddress, 1000);
 		
 		try {
 			synchronized(Map.lastSentPlayerPacket)
