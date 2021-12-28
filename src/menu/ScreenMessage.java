@@ -42,7 +42,8 @@ public class ScreenMessage {
 			switch(option) 
 			{
 			case 0:
-				game.initLobby(game.host);
+				game.QueueUp();
+				game.initLobby();
 				break;
 			case 1:
 				game.close();

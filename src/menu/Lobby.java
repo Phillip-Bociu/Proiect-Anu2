@@ -1,5 +1,8 @@
 package menu;
 
+import java.net.DatagramPacket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.List;
 
 import main.Game;
@@ -7,30 +10,70 @@ import main.InputH;
 import main.gfx.Colours;
 import main.gfx.Font;
 import main.gfx.Screen;
+import networking.LobbyPacket;
+import networking.PacketID;
 
 public class Lobby {
 	Game game;
 	boolean host, enemyFound = false, ready = false;
 	InputH input;
 	String opponentUsername = "????";
+	DatagramPacket packet;
 	
 	int option = 0;
 	List<String> options;
 	boolean walker = false;
 	public Lobby(Game game, InputH input, boolean host)
 	{
+		byte[] data = new byte[1024];
 		this.input = input;
 		this.game = game;
 		this.host = host;
+		this.packet = new DatagramPacket(data, data.length);
+		try {
+			game.socket.setSoTimeout(13);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	public void tick() {
-		if(input.Y.pressed())
+		LobbyPacket lp = null;
+		try
 		{
-			game.initWorld(host);
-			ready = ready ? false : true;
+			game.socket.receive(packet);
+			lp = new LobbyPacket();
+			lp.readFromBytes(packet.getData());
+			if(lp.packetID == PacketID.Connect)
+				host = false;
+			else if(lp.packetID == PacketID.Host)
+				host = true;
+			else
+				throw new Exception();
+			
+		}catch(SocketTimeoutException e)
+		{
+		}catch(Exception e)
+		{
+			lp = null;
+			e.printStackTrace();
 		}
+		
+		if(lp != null)
+		{
+			System.out.println(lp.packetID);
+			System.out.println(lp.otherIp);
+
+			game.initWorld(host);
+			if(host)
+				game.Host();
+			else
+				game.Connect(lp.otherIp);
+		}
+		
+		//TODO: handle player disconnect
 		if(input.N.isPressed())
 		{
+			game.DeQueue();
 			game.initGui();
 		}
 	}

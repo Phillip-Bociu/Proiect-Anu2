@@ -6,41 +6,37 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import java.io.Serializable;
-
-public class PlayerPacket implements Serializable{
-
-	private static final long serialVersionUID = 1L;
-	public int x, y, movingDir, numSteps;
-
-	public PlayerPacket()
+public class RegisterConfirmationPacket extends Packet{
+	private static final long serialVersionUID = -8180373407242626182L;
+	public boolean registered;
+	
+	public RegisterConfirmationPacket(boolean registered)
 	{
-		x = -1;
-		y = -1;
-		movingDir = -1;
-		numSteps = -1;
+		this.packetID = PacketID.RegisterConfirmation;
+		this.registered = registered;
 	}
 	
-	public PlayerPacket(int x, int y, int movingDir, int numSteps) {
-		super();
-		this.x = x;
-		this.y = y;
-		this.movingDir = movingDir;
-		this.numSteps = numSteps;
+	public RegisterConfirmationPacket()
+	{
+		this.packetID = PacketID.RegisterConfirmation;
+		this.registered = false;
 	}
 	
+	@Override
 	public void readFromBytes(byte[] packet) throws ClassNotFoundException, IOException
 	{
 		 try (ByteArrayInputStream bis = new ByteArrayInputStream(packet);
 		         ObjectInputStream in = new ObjectInputStream(bis)) {
-		        PlayerPacket p = ((PlayerPacket)(in.readObject())); 
-		        this.x = p.x;
-		        this.y = p.y;
-			    this.movingDir = p.movingDir;
-			    this.numSteps = p.numSteps;
-		 } 
+		        Packet pk = ((Packet)(in.readObject())); 
+		        if(pk.packetID == PacketID.RegisterConfirmation)
+		        {
+		        	RegisterConfirmationPacket p = (RegisterConfirmationPacket)pk;
+		        	this.registered = p.registered;
+		        }
+		 } 	
 	}
 	
+	@Override
 	public byte[] toBytes() throws IOException
 	{	
 		try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -49,5 +45,4 @@ public class PlayerPacket implements Serializable{
 		        return bos.toByteArray();
 		}
 	}
-
 }

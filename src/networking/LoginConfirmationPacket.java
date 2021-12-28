@@ -6,41 +6,42 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import java.io.Serializable;
+public class LoginConfirmationPacket extends Packet {
+	private static final long serialVersionUID = 1644252374114587571L;
 
-public class PlayerPacket implements Serializable{
-
-	private static final long serialVersionUID = 1L;
-	public int x, y, movingDir, numSteps;
-
-	public PlayerPacket()
+	public int ID;
+	public int elo;
+	
+	public LoginConfirmationPacket(int ID, int elo)
 	{
-		x = -1;
-		y = -1;
-		movingDir = -1;
-		numSteps = -1;
+		this.packetID = PacketID.LoginConfirmation;
+		this.ID = ID;
+		this.elo = elo;
 	}
 	
-	public PlayerPacket(int x, int y, int movingDir, int numSteps) {
-		super();
-		this.x = x;
-		this.y = y;
-		this.movingDir = movingDir;
-		this.numSteps = numSteps;
+	public LoginConfirmationPacket()
+	{
+		this.packetID = PacketID.LoginConfirmation;
+		this.ID = -1;
+		this.elo = 0;
 	}
 	
+	@Override
 	public void readFromBytes(byte[] packet) throws ClassNotFoundException, IOException
 	{
 		 try (ByteArrayInputStream bis = new ByteArrayInputStream(packet);
 		         ObjectInputStream in = new ObjectInputStream(bis)) {
-		        PlayerPacket p = ((PlayerPacket)(in.readObject())); 
-		        this.x = p.x;
-		        this.y = p.y;
-			    this.movingDir = p.movingDir;
-			    this.numSteps = p.numSteps;
+		        Packet pk = ((Packet)(in.readObject())); 
+		        if(pk.packetID == this.packetID)
+		        {
+		        	LoginConfirmationPacket p = (LoginConfirmationPacket)pk;
+		        	this.ID = p.ID;
+		        	this.elo = p.elo;
+		        }
 		 } 
 	}
 	
+	@Override
 	public byte[] toBytes() throws IOException
 	{	
 		try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -49,5 +50,4 @@ public class PlayerPacket implements Serializable{
 		        return bos.toByteArray();
 		}
 	}
-
 }

@@ -21,8 +21,7 @@ public class Gui {
 		this.game = game;
 		this.input = input;
 		options = new ArrayList<String>();
-		options.add("Connect");
-		options.add("Host");
+		options.add("Queue Up");
 		options.add("Exit");
 	}
 	public void tick() {
@@ -40,15 +39,13 @@ public class Gui {
 			switch(option) 
 			{
 			case 0:
-				game.initLobby(false);
-				game.Connect("26.176.53.192"); // IP of the server
+				game.QueueUp();
+				game.initLobby();
 				break;
 			case 1:
-				game.initLobby(true);
-				game.Host();
+				game.close();
 				break;
 			case 2:
-				game.close();
 				break;
 			}
 				

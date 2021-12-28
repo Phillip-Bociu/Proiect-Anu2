@@ -7,6 +7,10 @@ import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -18,6 +22,7 @@ import main.gfx.SpriteSheet;
 import map.Map;
 import menu.Gui;
 import menu.Lobby;
+import menu.Login;
 import menu.ScreenMessage;
 import networking.*;
 
@@ -66,11 +71,18 @@ public class Game extends Canvas implements Runnable{
 	public boolean host;
 	public gameState state;
 	public Account account;
-	
+	public DatagramSocket socket;
+	public InetAddress serverAddress;
+	public int userID;
 	/**
 	 * Initializing some other variables, mostly JFrame stuff
 	 */
-	public Game() {
+	public Game(String username, int elo, int ID, DatagramSocket socket, InetAddress serverAddress) {
+		this.account = new Account(username, elo);
+		this.socket = socket;
+		this.serverAddress = serverAddress;
+		this.userID = ID;
+		
 		setMinimumSize(new Dimension(WIDTH*SCALE,HEIGHT*SCALE));
 		setMaximumSize(new Dimension(WIDTH*SCALE,HEIGHT*SCALE));
 		setPreferredSize(new Dimension(WIDTH*SCALE,HEIGHT*SCALE));
@@ -100,6 +112,29 @@ public class Game extends Canvas implements Runnable{
 		server.start();
 	}
 	
+	public void QueueUp()
+	{
+		QueueUpPacket qu = new QueueUpPacket();
+		qu.ID = userID;
+		try {			
+			DatagramPacket p = new DatagramPacket(qu.toBytes(), qu.toBytes().length, serverAddress, 1331);
+			socket.send(p);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void DeQueue()
+	{
+		DeQueuePacket dq = new DeQueuePacket();
+		dq.ID = userID;
+		try {			
+			DatagramPacket p = new DatagramPacket(dq.toBytes(), dq.toBytes().length, serverAddress, 1331);
+			socket.send(p);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 	/**
 	 * Method to initialize the game with canvas and bond it with the input handler
@@ -121,7 +156,7 @@ public class Game extends Canvas implements Runnable{
 		}
 		
 		screen = new Screen(WIDTH,HEIGHT,new SpriteSheet("/sprite_sheet.png"));
-		account = new Account("JohnSeed",312);
+		//account = new Account("JohnSeed",312);
 		initGui();
 		
 	}
@@ -138,8 +173,9 @@ public class Game extends Canvas implements Runnable{
 		lobby = null;
 		gui = new Gui(this,new InputH(this,true,false));
 	}
-	public void initLobby(boolean host)
+	public void initLobby()
 	{
+		host = true;
 		screen.xOffset = 0;
 		screen.yOffset = 0;
 		state = gameState.lobby;
@@ -342,7 +378,14 @@ public class Game extends Canvas implements Runnable{
 	}
 	
 	public static void main(String args[]) {
-		new Game().start();
+		
+		Login frame = new Login("127.0.0.1");
+        frame.setTitle("Login Form");
+        frame.setVisible(true);
+        frame.setBounds(700, 200, 370, 600);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setResizable(false);
+	//	new Game().start();
 	}
 
 }
