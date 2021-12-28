@@ -42,7 +42,7 @@ public class ScreenMessage {
 			switch(option) 
 			{
 			case 0:
-				game.initWorld(game.host);
+				game.initLobby(game.host);
 				break;
 			case 1:
 				game.close();

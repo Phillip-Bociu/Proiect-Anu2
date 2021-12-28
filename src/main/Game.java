@@ -135,6 +135,7 @@ public class Game extends Canvas implements Runnable{
 		screen.yOffset = 0;
 		state = gameState.menu;
 		screenMessage = null;
+		lobby = null;
 		gui = new Gui(this,new InputH(this,true,false));
 	}
 	public void initLobby(boolean host)
@@ -144,7 +145,7 @@ public class Game extends Canvas implements Runnable{
 		state = gameState.lobby;
 		screenMessage = null;
 		gui = null;
-		lobby = new Lobby(this, host);
+		lobby = new Lobby(this, new InputH(this, true, true), host);
 	}
 	public void initScreenMessage(String message)
 	{

@@ -75,6 +75,8 @@ public class InputH implements KeyListener, MouseInputListener{
 	}
 	
 		public Key up = new Key();
+		public Key N = new Key();
+		public Key Y = new Key();
 		public Key down = new Key();
 		public Key left = new Key();
 		public Key right = new Key();
@@ -100,6 +102,8 @@ public class InputH implements KeyListener, MouseInputListener{
 		if(keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN) down.toggle(press);
 		if(keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT) left.toggle(press);
 		if(keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT) right.toggle(press);
+		if(keyCode == KeyEvent.VK_N) N.toggle(press);
+		if(keyCode == KeyEvent.VK_Y) Y.toggle(press);
 		if(keyCode == KeyEvent.VK_ENTER) enter.toggle(press);
 	}
 	public void togglePress(int keyCode)
@@ -108,6 +112,8 @@ public class InputH implements KeyListener, MouseInputListener{
 			up.pressed = true;
 		if(keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN)
 			down.pressed = true;
+		if(keyCode == KeyEvent.VK_Y)
+			Y.pressed = true;
 	}
 	public void toggleRelease(int keyCode)
 	{
@@ -115,6 +121,8 @@ public class InputH implements KeyListener, MouseInputListener{
 			up.released = true;
 		if(keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN)
 			down.released = true;
+		if(keyCode == KeyEvent.VK_Y)
+			Y.released = true;
 	}
 
 	public void mouseClicked(MouseEvent e) {
