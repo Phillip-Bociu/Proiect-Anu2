@@ -19,7 +19,7 @@ public class Client extends Thread
 	{
 		try {
 			
-			this.socket = new DatagramSocket();
+			this.socket = new DatagramSocket(1000);
 			this.ipAddress = InetAddress.getByName(ipAddress);
 		} catch (SocketException e) {
 			e.printStackTrace();
@@ -31,7 +31,7 @@ public class Client extends Thread
 	public void run()
 	{
 		byte[] data = new byte[1024];
-		DatagramPacket packet = new DatagramPacket(data, data.length, ipAddress, 1331);
+		DatagramPacket packet = new DatagramPacket(data, data.length, ipAddress, 1000);
 		
 		try {
 			synchronized(Map.lastSentPlayerPacket)

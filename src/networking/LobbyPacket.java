@@ -11,20 +11,23 @@ public class LobbyPacket extends Packet{
 	private static final long serialVersionUID = -7079118008582662752L;
 
 	public String otherIp;
+	public String otherUsername;
 	
 	public LobbyPacket()
 	{
 		this.packetID = null;
 		this.otherIp = null;
+		this.otherUsername = null;
 	}
 	
-	public LobbyPacket(boolean isHost, String otherIp)
+	public LobbyPacket(boolean isHost, String otherIp, String otherUsername)
 	{
 		if(isHost)
 			this.packetID = PacketID.Host;
 		else
 			this.packetID = PacketID.Connect;
 		this.otherIp = String.copyValueOf(otherIp.toCharArray());
+		this.otherUsername = String.copyValueOf(otherUsername.toCharArray());
 	}
 		
 	@Override
@@ -38,6 +41,7 @@ public class LobbyPacket extends Packet{
 		        	LobbyPacket p = (LobbyPacket)pk;	        	
 		        	this.packetID = p.packetID;
 		        	this.otherIp = String.copyValueOf(p.otherIp.toCharArray());
+		        	this.otherUsername = String.copyValueOf(p.otherUsername.toCharArray());
 		        }
 		 } 
 	}

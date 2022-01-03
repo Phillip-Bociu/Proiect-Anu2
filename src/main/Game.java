@@ -194,17 +194,17 @@ public class Game extends Canvas implements Runnable{
 	{
 		this.host = host;
 		state = gameState.battle;
-		lobby = null;
 		map = new Map(mapPath,this);
 		if(host) {
 			player = new Player(map, account.username, screen, 16*map.spawnX[0], 16*map.spawnY[0], new InputH(this,true,true), true, Colours.get(-1,401,502,555));
-			player2 = new Player(map, "Player 2", screen, 16*map.spawnX[1], 16*map.spawnY[1], new InputH(this,false,false), false, Colours.get(-1,204,305,555));
+			player2 = new Player(map, lobby.opponentUsername, screen, 16*map.spawnX[1], 16*map.spawnY[1], new InputH(this,false,false), false, Colours.get(-1,204,305,555));
 		}
 		else
 		{
 			player = new Player(map, account.username, screen, 16*map.spawnX[1], 16*map.spawnY[1], new InputH(this,true,true), true, Colours.get(-1,204,305,555));
-			player2 = new Player(map, "Player 2", screen, 16*map.spawnX[0], 16*map.spawnY[0], new InputH(this,false,false), false, Colours.get(-1,401,502,555));
+			player2 = new Player(map, lobby.opponentUsername, screen, 16*map.spawnX[0], 16*map.spawnY[0], new InputH(this,false,false), false, Colours.get(-1,401,502,555));
 		}
+		lobby = null;
 		map.addEntity(player);
 		map.addEntity(player2);
 		//384 - 432
@@ -378,7 +378,7 @@ public class Game extends Canvas implements Runnable{
 	
 	public static void main(String args[]) {
 		
-		Login frame = new Login("127.0.0.1");
+		Login frame = new Login("26.176.53.192");
         frame.setTitle("Login Menu");
         frame.setVisible(true);
         frame.setBounds(400, 200, 370, 280);

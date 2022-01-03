@@ -16,7 +16,7 @@ public class Lobby {
 	Game game;
 	boolean host, enemyFound = false, ready = false;
 	InputH input;
-	String opponentUsername = "????";
+	public String opponentUsername = "????";
 	DatagramPacket packet;
 	
 	int option = 0;

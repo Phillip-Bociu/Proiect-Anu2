@@ -33,7 +33,7 @@ public class Login extends JFrame implements ActionListener {
 	public Login(String ipAddress) {
 		try {
 
-			this.socket = new DatagramSocket();
+			this.socket = new DatagramSocket(1331);
 			this.ipAddress = InetAddress.getByName(ipAddress);
 		} catch (Exception e) {
 			e.printStackTrace();

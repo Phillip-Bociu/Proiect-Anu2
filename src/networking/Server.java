@@ -20,7 +20,7 @@ public class Server extends Thread
 	{
 		try {
 			
-			this.socket = new DatagramSocket(1331);
+			this.socket = new DatagramSocket(1000);
 			
 		} catch (SocketException e) {
 			e.printStackTrace();
