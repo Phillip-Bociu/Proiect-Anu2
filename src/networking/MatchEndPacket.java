@@ -23,6 +23,7 @@ public class MatchEndPacket extends Packet{
 	
 	public MatchEndPacket(String winnerName, String loserName)
 	{
+		this.packetID = PacketID.MatchEnd;
 		this.winnerName = winnerName;
 		this.loserName = loserName;
 	}

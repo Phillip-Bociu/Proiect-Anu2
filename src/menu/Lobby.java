@@ -67,12 +67,13 @@ public class Lobby {
 		{	
 			received = true;
 			opponentUsername = lp.otherUsername;
-			enemyFound = true;			
+			enemyFound = true;
+			game.render();
 		}
 		else if(received)
 		{
 			try {
-				Thread.sleep(500);
+				Thread.sleep(5000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
