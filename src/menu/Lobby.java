@@ -37,6 +37,7 @@ public class Lobby {
 	}
 	public void tick() {
 		LobbyPacket lp = null;
+		
 		try
 		{
 			game.socket.receive(packet);
@@ -61,27 +62,28 @@ public class Lobby {
 		
 		if(lp != null)
 		{
-			System.out.println(lp.packetID);
-			System.out.println(lp.otherIp);
-			
 			if(host)
+			{	
 				game.Host();
-			else
-			{
-				game.Connect(lp.otherIp);
-			
-			
 				try {
-					Thread.sleep(5000);
+					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+			}
+			else
+			{
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				game.Connect(lp.otherIp);	
 			}
 			
 			game.initWorld(host);
 		}
 		
-		//TODO: handle player disconnect
 		if(input.N.isPressed())
 		{
 			game.DeQueue();

@@ -378,7 +378,7 @@ public class Game extends Canvas implements Runnable{
 	
 	public static void main(String args[]) {
 		
-		Login frame = new Login("26.176.53.192");
+		Login frame = new Login("127.0.0.1");
         frame.setTitle("Login Menu");
         frame.setVisible(true);
         frame.setBounds(400, 200, 370, 280);
