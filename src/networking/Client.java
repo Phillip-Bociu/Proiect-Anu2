@@ -2,6 +2,7 @@ package networking;
 
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 import java.io.IOException;
@@ -14,6 +15,7 @@ public class Client extends Thread
 	
 	private InetAddress ipAddress;
 	private DatagramSocket socket;
+	public boolean isRunning;
 	
 	public Client(String ipAddress)
 	{
@@ -26,27 +28,29 @@ public class Client extends Thread
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
+		
+		isRunning = false;
 	}
 	
 	public void run()
 	{
 		byte[] data = new byte[1024];
 		DatagramPacket packet = new DatagramPacket(data, data.length, ipAddress, 1000);
-		
 		try {
 			synchronized(Map.lastSentPlayerPacket)
 			{					
 				packet.setData(Map.lastSentPlayerPacket.toBytes());
 			}
 			socket.send(packet);
-
-		} catch (IOException e1) {
+			socket.setSoTimeout(2000);
+		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
 		
-		ProjectilePacket proj = new ProjectilePacket();
 		
-		while(true)
+		ProjectilePacket proj = new ProjectilePacket();
+		isRunning = true;
+		while(isRunning)
 		{
 			try {
 				socket.receive(packet);
@@ -75,12 +79,16 @@ public class Client extends Thread
 					Map.lastSentProjectilePacket.speed = 0;
 				}
 				socket.send(packet);
-			}catch (IOException e)
+			}
+			catch(SocketTimeoutException e)
 			{
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
+			}
+			catch (Exception e)
+			{
 				e.printStackTrace();
 			}
 		}
+		
+		socket.close();
 	}
 }

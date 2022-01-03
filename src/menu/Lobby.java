@@ -18,7 +18,8 @@ public class Lobby {
 	InputH input;
 	public String opponentUsername = "????";
 	DatagramPacket packet;
-	
+	public LobbyPacket lp;
+	public boolean received;
 	int option = 0;
 	List<String> options;
 	boolean walker = false;
@@ -29,6 +30,8 @@ public class Lobby {
 		this.game = game;
 		this.host = host;
 		this.packet = new DatagramPacket(data, data.length);
+		this.lp = null;
+		this.received = false;
 		try {
 			game.socket.setSoTimeout(13);
 		} catch (Exception e) {
@@ -36,7 +39,7 @@ public class Lobby {
 		}
 	}
 	public void tick() {
-		LobbyPacket lp = null;
+
 		
 		try
 		{
@@ -60,10 +63,19 @@ public class Lobby {
 			e.printStackTrace();
 		}
 		
-		if(lp != null)
-		{
+		if(lp != null && received == false)
+		{	
+			received = true;
 			opponentUsername = lp.otherUsername;
-			enemyFound = true;
+			enemyFound = true;			
+		}
+		else if(received)
+		{
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			if(host)
 			{	
 				game.Host();
@@ -86,7 +98,7 @@ public class Lobby {
 			game.initWorld(host);
 		}
 		
-		if(input.N.isPressed())
+		if(input.N.isPressed() && !received)
 		{
 			game.DeQueue();
 			game.initGui();

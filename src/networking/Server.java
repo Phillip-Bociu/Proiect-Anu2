@@ -2,6 +2,7 @@ package networking;
 
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 
 import map.Map;
 
@@ -15,13 +16,13 @@ public class Server extends Thread
 	private DatagramSocket socket;
 	public InetAddress ipAddress;
 	public int port;
-	
+	public boolean isRunning;
 	public Server()
 	{
 		try {
 			
 			this.socket = new DatagramSocket(1000);
-			
+			isRunning = false;
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
@@ -42,7 +43,9 @@ public class Server extends Thread
 		
 		ProjectilePacket proj = new ProjectilePacket();
 		
-		while(true)
+		isRunning = true;
+		
+		while(isRunning)
 		{
 			
 			try {
@@ -76,13 +79,17 @@ public class Server extends Thread
 					}
 				
 					
-			}catch (IOException e)
+			}catch(SocketTimeoutException e)
+			{
+					 
+			}
+			catch (Exception e)
 			{
 				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}			
+			}
 		}
+		
+		socket.close();
 	}
 	
 	

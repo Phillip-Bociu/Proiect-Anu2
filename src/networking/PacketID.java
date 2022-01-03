@@ -9,5 +9,6 @@ public enum PacketID {
 	Register,
 	RegisterConfirmation,
 	QueueConfirmation,
-	DeQueue
+	DeQueue,
+	MatchEnd
 }
