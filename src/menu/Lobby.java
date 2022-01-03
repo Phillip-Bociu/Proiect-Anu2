@@ -62,6 +62,8 @@ public class Lobby {
 		
 		if(lp != null)
 		{
+			opponentUsername = lp.otherUsername;
+			enemyFound = true;
 			if(host)
 			{	
 				game.Host();
